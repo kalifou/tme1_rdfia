@@ -1,15 +1,59 @@
-
 function sift=computeSIFT(s,Ig,Ior,Mg)
+    %%Computes sift descriptor from a s(=16) pixel image patch, 
+    %%having as input Ig (16x16 image with gradient norm), 
+    %%Ior (16x16 image with gradient orientation), and Mg (16x16 Gaussian mask).
     
-    % R : matrix of samples over the whole picture I
     
-    % s =16
-    % ig = 16 *16
+    % Init* of histogramms
+    s_s = sqrt(s); % ss = sqrt(16) =4
+    H =   zeros(s_s,s_s,8);
     
-    %sift = 0;
-    %sig = 0.5 * width;
-    %H = H + G * M;
-    H += times(Ig,Mg);
-    return H;
+    % Creating 4*4 Block cells of pixels out of the 16*16 initial matrices
+    N = s_s * ones(1,s_s); 
+    Blocks_ig  = mat2cell(Ig,N,N);    
+    Blocks_ior  = mat2cell(Ior,N,N);    
+    Blocks_Mg  = mat2cell(Mg,N,N);   
+    
+    for i=1:4
+        for j=1:4
+            % Collecting related i,j block of 4*4 pixels for Ior,Mg & Ig
+            block_ior = cell2mat( Blocks_ior(i,j));  
+            block_ig = cell2mat( Blocks_ig(i,j));  
+            block_Mg = cell2mat( Blocks_Mg(i,j)); 
+            
+            % Updating the Orientation Histogramms for each pixels of the
+            % current (i,j) block
+            for ii=1:16 % for every pixel (ii) )
+                inter =  block_ig(ii) .* block_Mg(ii);
+                
+                H( i,j,block_ior(ii)) = H( i,j,block_ior(ii)) + inter;
+            end
+            
+        end
+    end
+    
+    % Before normalizing, prevents getting NaN vals 
+    H= H + 10^-9;
+    sift = [];
+    % For every block (i,j), processing the related histogram
+    for i=1:4
+        for j=1:4
+            
+            % L2 Normalization
+            H(i,j,:) =  H(i,j,:) / sum(H(i,j,:).^2);
+            
+            % Cutting values above a threshold t =0.2
+            t=.2;
+            idxs =  find (H(i,j,:) > t); % collecting indexes
+            H(i,j,idxs) = t;
+            
+            % L2 Normalization          
+            H(i,j,:) =  H(i,j,:) / sum(H(i,j,:).^2);
+            h = H(i,j,:);
+            
+            % Adding to result
+            sift= [sift; h(:) ];
+        end
+    end     
 end
     
