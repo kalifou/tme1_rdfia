@@ -1,5 +1,4 @@
 function J = drawPatches(I,r,s,sifts)
-
 J = zeros(size(I,1),size(I,2),3);
 for i=1:3
     J(:,:,i) = I(:,:);
