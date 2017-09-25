@@ -3,8 +3,8 @@ function sift=computeSIFT(s,Ig,Ior,Mg)
     %%having as input Ig (16x16 image with gradient norm), 
     %%Ior (16x16 image with gradient orientation), and Mg (16x16 Gaussian mask).
     
-    %PART 2 --> Use of thersholding to ignore low gradient regions
-    thr = 0.0001;
+    %Use of thersholding to ignore low gradient regions
+    thr = 5;
     
     % Init* of histogramms
     s_s = sqrt(s); % ss = sqrt(16) =4
@@ -32,23 +32,21 @@ function sift=computeSIFT(s,Ig,Ior,Mg)
                 inter =  block_ig(ii) * block_Mg(ii);
                 H( i,j,block_ior(ii)) = H( i,j,block_ior(ii)) + inter;
             end
-            %{
-            %Part 2 --> erase values for low gradient regions
-            if (norm(squeeze(H(i,j,:))) < thr)
-                a = 'hello'
-                H(i,j,:) = 0;
-            end  
-   %}
         end
     end
     
     %Create descriptor
     sift = [H(:)];
     
-    %L2 Normalization + Thresholding + Second L2 Norm
-    sift = sift ./ norm(sift);
-    sift = min(sift,0.2);
-    sift = sift ./ norm(sift);
+    %If norm of sift to low, replaced by null vector
+    %Else L2 Normalization + Thresholding + Second L2 Norm 
+    if (norm(sift) < thr)
+        sift = zeros(size(sift));
+    else
+        sift = sift ./ norm(sift);
+        sift = min(sift,0.2);
+        sift = sift ./ norm(sift);
+    end
 
 end
     
