@@ -11,7 +11,7 @@ s =16;
 %%%%%%%TEST
 % Ps : le test echou pour l'image test ( I = marche()) car on obtient des Ior = O parfois ! (nonsense) 
 I = randomImage('Scene/') + eps; % PS : I = 200 X 267 
-%I = marche()+eps;
+I = marche()+eps;
 xi = 125;
 xii = xi+15;
 yj = 100;

@@ -32,28 +32,13 @@ function sift=computeSIFT(s,Ig,Ior,Mg)
         end
     end
     
-    % Before normalizing, prevents getting NaN vals 
-    H= H + 10^-9;
-    sift = [];
-    % For every block (i,j), processing the related histogram
-    for i=1:4
-        for j=1:4
-            
-            % L2 Normalization
-            H(i,j,:) =  H(i,j,:) / sum(H(i,j,:).^2);
-            
-            % Cutting values above a threshold t =0.2
-            t=.2;
-            idxs =  find (H(i,j,:) > t); % collecting indexes
-            H(i,j,idxs) = t;
-            
-            % L2 Normalization          
-            H(i,j,:) =  H(i,j,:) / sum(H(i,j,:).^2);
-            h = H(i,j,:);
-            
-            % Adding to result
-            sift= [sift; h(:) ];
-        end
-    end     
+    %Create descriptor
+    sift = [H(:)];
+    
+    %L2 Normalization + Thresholding + Second L2 Norm
+    sift = sift ./ norm(sift);
+    sift = min(sift,0.2);
+    sift = sift ./ norm(sift);
+
 end
     
