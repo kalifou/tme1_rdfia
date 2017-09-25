@@ -1,14 +1,13 @@
-clear all;
-close all;
+clc;close all;clear;
 
 
 cate = categories();
 
 % A REMPLACER AVEC LE DOSSIER CONTENANT LES IMAGES 
-%pathim = '../../../scene_categories/';
+pathim = 'Scene/';
 
 % A REMPLACER AVEC LE DOSSIER CONTENANT LES DESCRIPTEURS SIFT 
-%pathdes = '../../../descriptors3/';
+pathdes = 'allSifts/';
 
 s= 16;
 delta = 8;
