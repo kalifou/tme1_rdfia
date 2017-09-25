@@ -5,7 +5,7 @@ sifts=[];
 
 % params
 delta = 8; % overlap
-s =16;
+s = 16;
 
 % Extracting Norm of Gradient Ig, Orientation, And Gradient Ix & Iy
 % matrices
@@ -15,7 +15,7 @@ hy = [ 1 2 1];
 Iy = convolution_separable(I,hy,hx);
 Ix = convolution_separable(I,hx',hy');
 Ig = sqrt(Ix.^2 + Iy.^2);
-Ior = orientation(Ix,Iy,I);
+Ior = orientation(Ix,Iy,Ig);
 
 % Creating the Gaussian Mask
 Mg = gaussSIFT(s);

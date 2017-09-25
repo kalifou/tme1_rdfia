@@ -3,6 +3,8 @@ function sift=computeSIFT(s,Ig,Ior,Mg)
     %%having as input Ig (16x16 image with gradient norm), 
     %%Ior (16x16 image with gradient orientation), and Mg (16x16 Gaussian mask).
     
+    %PART 2 --> Use of thersholding to ignore low gradient regions
+    thr = 0.0001;
     
     % Init* of histogramms
     s_s = sqrt(s); % ss = sqrt(16) =4
@@ -24,11 +26,19 @@ function sift=computeSIFT(s,Ig,Ior,Mg)
             % Updating the Orientation Histogramms for each pixels of the
             % current (i,j) block
             for ii=1:16 % for every pixel (ii) )
-                inter =  block_ig(ii) .* block_Mg(ii);
-                
+                if block_ig(ii) == 0
+                    continue
+                end
+                inter =  block_ig(ii) * block_Mg(ii);
                 H( i,j,block_ior(ii)) = H( i,j,block_ior(ii)) + inter;
             end
-            
+            %{
+            %Part 2 --> erase values for low gradient regions
+            if (norm(squeeze(H(i,j,:))) < thr)
+                a = 'hello'
+                H(i,j,:) = 0;
+            end  
+   %}
         end
     end
     

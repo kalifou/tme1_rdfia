@@ -1,3 +1,4 @@
+clc;close all;clear;
 % Adding path
 addpath('descripteurs/');
 addpath('k-means/');
@@ -5,16 +6,15 @@ addpath('k-means/');
 
 % params
 delta = 8; % overlap
-eps = 10^-20; % to prevent from having null gradient
 s =16;
 
 %%%%%%%TEST
 % Ps : le test echou pour l'image test ( I = marche()) car on obtient des Ior = O parfois ! (nonsense) 
-I = randomImage('Scene/') + eps; % PS : I = 200 X 267 
-I = marche()+eps;
-xi = 125;
+I = randomImage('Scene/'); % PS : I = 200 X 267 
+%I = marche();
+xi = 121;%test on 125 97 121
 xii = xi+15;
-yj = 100;
+yj = 121;%test on 100 121 121
 yjj = yj+15;
 patch = [xi;yj];
 
@@ -28,7 +28,7 @@ hy = [ 1 2 1];
 Iy = convolution_separable(I,hy,hx);
 Ix = convolution_separable(I,hx',hy');
 Ig = sqrt(Ix.^2 + Iy.^2);
-Ior = orientation(Ix,Iy,I);
+Ior = orientation(Ix,Iy,Ig);
 
 % Creating the Gaussian Mask
 Mg = gaussSIFT(s);
