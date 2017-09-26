@@ -1,7 +1,7 @@
 clc;close all;clear;
 % Adding path
-%addpath('descripteurs/');
-%addpath('k-means/');
+addpath('descripteurs/');
+addpath('k-means/');
 
 % params
 delta = 8; % overlap
