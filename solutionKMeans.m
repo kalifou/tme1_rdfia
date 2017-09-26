@@ -1,8 +1,9 @@
 function [centers, error] = solutionKMeans(points, M)
+    maxIter = 50;
     %Init centers randomly
     centers = randomSeed(points, M);
     
-    it = 0;
+    iteration = 0;
     movecenters = 1;
     while(sum(movecenters) > 0)          
         %Compute MxN neighboor matrix 
@@ -10,7 +11,11 @@ function [centers, error] = solutionKMeans(points, M)
         
         %Update centers
         [centers, error, movecenters] = miseAjourKMeans(points, centers, nc);
-        it = it + 1
-        sum(movecenters)
+        
+        iteration = iteration + 1;
+        if iteration >= maxIter
+            break;
+        end
     end
+    sprintf('KMeans done in %d iterations', iteration)
 end
